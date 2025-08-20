@@ -1,0 +1,16 @@
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+
+    # Optional: allow only your app domain to access n8n from browser (if ever used)
+    cors-for-app:
+      headers:
+        accessControlAllowMethods: ["GET","POST","OPTIONS"]
+        accessControlAllowHeaders: ["Authorization","Content-Type"]
+        accessControlAllowOriginList: ["https://app.${DOMAIN}"]
+        accessControlAllowCredentials: true
+        addVaryHeader: true
+
+

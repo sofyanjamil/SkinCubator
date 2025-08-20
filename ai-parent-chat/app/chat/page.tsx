@@ -35,8 +35,21 @@ export default function SkinCubatorChat() {
 			setMessages([
 				{
 					id: "welcome-1",
-					content:
-						"Hello! I'm here to support you through your skin-to-skin care journey with your baby. Whether you have questions about kangaroo care techniques, timing, benefits, or need reassurance during this bonding experience, I'm here to guide you every step of the way. How can I help you today?",
+					content: `Hi there, and welcome to our neonatal intensive care unit, or NICU for short.
+I am Skincu-AI, and I'm part of a tool that has been built to help you understand how you can support and care for your baby while they are in the NICU and think about solutions for some of the problems you might have.
+You probably have a lot of questions and concerns, I'm sure it's been very intense so far, and our team will try to answer all of them shortly.
+
+You probably didn’t intend to be here right now, and this isn’t what you planned. 
+But here you are, and before we start, 
+
+We are committed to helping you and your baby get through this, with the best outcome possible.
+And to do that, we need your help. 
+
+This conversation is going to have a few simple steps. 
+
+The information you share is confidential, and only the staff caring for your baby will have access to it.
+
+So, shall we begin?`,
 					sender: "ai",
 					timestamp: new Date(Date.now() - 5 * 60 * 1000),
 				},
