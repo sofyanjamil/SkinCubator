@@ -10,9 +10,9 @@ pnpm install
 ```
 
 2. Configure environment
-- Copy `env.sample` to `.env.local` and set:
-  - `N8N_BASE_URL` (e.g., https://n8n.example.com)
-  - `N8N_CHAT_WEBHOOK_PATH` (e.g., /webhook/skinchat)
+- Copy `env.sample` to `.env.local` and set ONE of:
+  - `N8N_CHAT_WEBHOOK_URL` (full URL, e.g., https://n8n.example.com/webhook/skinchat)
+  - OR `N8N_BASE_URL` + `N8N_CHAT_WEBHOOK_PATH` (legacy)
   - Optional: `SESSION_COOKIE_NAME`, `SESSION_COOKIE_MAX_AGE`
   - Optional: `NEXT_PUBLIC_APP_NAME`
 
@@ -37,6 +37,9 @@ pnpm db:down
 ```bash
 pnpm db:logs
 ```
+
+### Enable message persistence in the app
+Set DB env vars in `.env.local` for the frontend to persist messages (e.g. `DATABASE_URL=postgresql://skincubator:skincubator@localhost:5432/skincubator?sslmode=disable`).
 
 Docker service details:
 - Image: `pgvector/pgvector:pg16`

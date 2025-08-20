@@ -1,6 +1,9 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import { N8N_BASE_URL, N8N_CHAT_WEBHOOK_PATH, SESSION_COOKIE_NAME, SESSION_COOKIE_MAX_AGE, isN8nConfigured } from "@/lib/config"
+import { N8N_BASE_URL, N8N_CHAT_WEBHOOK_PATH, N8N_CHAT_WEBHOOK_URL, SESSION_COOKIE_NAME, SESSION_COOKIE_MAX_AGE, isN8nConfigured } from "@/lib/config"
+import { getOrCreateActiveConversationId, getOrCreateUserIdByExternalId, insertMessage, isDbConfigured } from "@/lib/db"
+
+export const runtime = "nodejs"
 
 function getSessionId() {
 	const cookieStore = cookies()
@@ -21,6 +24,7 @@ function getSessionId() {
 export async function POST(req: NextRequest) {
 	const { messages = [] } = await req.json().catch(() => ({ messages: [] }))
 	const sessionId = getSessionId()
+	const lastUserMessage = Array.isArray(messages) && messages.length > 0 ? messages[messages.length - 1] : null
 
 	if (!isN8nConfigured()) {
 		return NextResponse.json({
@@ -30,8 +34,14 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const url = new URL(N8N_CHAT_WEBHOOK_PATH, N8N_BASE_URL).toString()
-		const lastMessage = Array.isArray(messages) && messages.length > 0 ? messages[messages.length - 1] : null
+		const url = N8N_CHAT_WEBHOOK_URL || new URL(N8N_CHAT_WEBHOOK_PATH, N8N_BASE_URL).toString()
+		// Persist the user message first (if DB configured)
+		if (isDbConfigured() && lastUserMessage && typeof lastUserMessage.content === "string") {
+			const userId = await getOrCreateUserIdByExternalId(sessionId)
+			const conversationId = await getOrCreateActiveConversationId(userId)
+			await insertMessage(conversationId, "user", lastUserMessage.content)
+		}
+		const lastMessage = lastUserMessage
 		const n8nRes = await fetch(url, {
 			method: "POST",
 			headers: {
@@ -49,9 +59,30 @@ export async function POST(req: NextRequest) {
 		const contentType = n8nRes.headers.get("content-type") || ""
 		if (contentType.includes("application/json")) {
 			const data = await n8nRes.json()
+			let replyText: string | null = null
+			const direct = (data?.reply ?? data?.message ?? data?.text ?? data?.content ?? data?.output)
+			if (typeof direct === "string" && direct.trim()) {
+				replyText = direct
+			} else {
+				try {
+					const choice = data?.choices?.[0]
+					const maybe = choice?.message?.content ?? choice?.text
+					if (typeof maybe === "string" && maybe.trim()) replyText = maybe
+				} catch {}
+			}
+			if (isDbConfigured() && replyText) {
+				const userId = await getOrCreateUserIdByExternalId(sessionId)
+				const conversationId = await getOrCreateActiveConversationId(userId)
+				await insertMessage(conversationId, "ai", replyText)
+			}
 			return NextResponse.json(data)
 		}
 		const reply = await n8nRes.text()
+		if (isDbConfigured() && reply) {
+			const userId = await getOrCreateUserIdByExternalId(sessionId)
+			const conversationId = await getOrCreateActiveConversationId(userId)
+			await insertMessage(conversationId, "ai", reply)
+		}
 		return NextResponse.json({ reply })
 	} catch (err: any) {
 		return NextResponse.json({ error: "Proxy failed", detail: String(err?.message || err) }, { status: 500 })
