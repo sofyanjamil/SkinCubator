@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Heart, MessageCircle } from "lucide-react"
+import { Heart } from "lucide-react"
+import Image from "next/image"
 
 interface LoadingScreenProps {
   onComplete: () => void
@@ -66,8 +67,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           />
         </div>
 
-        {/* Floating Icon */}
-        <MessageCircle className="w-8 h-8 text-[#6282E3] mx-auto animate-bounce" />
+        {/* Floating Logo */}
+        <Image
+          src="/skincubator-logo.svg"
+          alt="SkinCubator logo"
+          width={32}
+          height={32}
+          className="mx-auto animate-bounce"
+        />
       </div>
     </div>
   )

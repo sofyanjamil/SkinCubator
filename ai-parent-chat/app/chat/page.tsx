@@ -7,7 +7,8 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Send, Sparkles, ArrowLeft } from "lucide-react"
+import { Send, ArrowLeft } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { sendChat } from "@/lib/chatClient"
 
@@ -135,12 +136,7 @@ So, shall we begin?`,
 								<ArrowLeft className="w-4 h-4" />
 							</Button>
 						</Link>
-						<div
-							className="w-10 h-10 rounded-full flex items-center justify-center"
-							style={{ backgroundColor: "#6282E3" }}
-						>
-							<Sparkles className="w-5 h-5 text-white" />
-						</div>
+						<Image src="/skincubator-logo.svg" alt="SkinCubator logo" width={32} height={32} />
 						<div>
 							<h1 className="font-sans font-semibold text-lg text-white">SkinCubator</h1>
 							<p className="text-sm" style={{ color: "#A8D5BA" }}>
@@ -154,7 +150,7 @@ So, shall we begin?`,
 			{/* Chat Container */}
 			<div className="max-w-4xl mx-auto px-4 py-6">
 				<Card
-					className="shadow-lg h-[calc(100vh-220px)] flex flex-col"
+					className="shadow-lg h-[calc(100vh-160px)] flex flex-col"
 					style={{ backgroundColor: "white", border: "1px solid #e2e8f0" }}
 				>
 					{/* Messages */}

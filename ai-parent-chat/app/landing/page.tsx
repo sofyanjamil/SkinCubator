@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Heart, MessageCircle, Shield, Moon, Sun, Pause, Play } from "lucide-react"
+import Image from "next/image"
 import LoadingScreen from "@/components/loading-screen"
 
 export default function LandingPage() {
@@ -42,7 +43,7 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6">
         <div className="flex items-center space-x-2">
-          <Heart className="w-8 h-8 text-[#F7A07C]" />
+          <Image src="/skincubator-logo.svg" alt="SkinCubator logo" width={32} height={32} />
           <span className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-[#1B2250]"}`}>SkinCubator</span>
         </div>
         <div className="flex items-center space-x-4">
