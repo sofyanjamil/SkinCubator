@@ -250,10 +250,10 @@ So, shall we begin?`,
 								onClick={() => handleSendMessage()}
 								disabled={!inputValue.trim() || isTyping}
 								size="icon"
-								className="shrink-0 shadow-sm"
+								className="shrink-0 shadow-sm h-11 w-11"
 								style={{ backgroundColor: "#F7A07C" }}
 							>
-								<Send className="w-4 h-4" />
+								<Send className="w-5 h-5" />
 							</Button>
 						</div>
 					</div>
